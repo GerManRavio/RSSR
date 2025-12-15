@@ -1,9 +1,15 @@
 import './App.css'
 
-function App() {
-  return (
-      <h1>Vite + React</h1>
-  )
+export default function App() {
+    if (import.meta.env.SSR) {
+        console.log("Home Server")
+    } else {
+        console.log("Home Client")
+    }
+    return (
+        <>
+            <h1>Home</h1>
+            <button>Login</button>
+        </>
+    )
 }
-
-export default App

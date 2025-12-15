@@ -39,7 +39,7 @@ app.use('*all', async (req, res) => {
 
     /** @type {string} */
     let template
-    /** @type {import('./src/entry-server.js').render} */
+    /** @type {import('./src/entry-server.jsx').render} */
     let render
     if (!isProduction) {
       // Always read fresh template in development
@@ -51,6 +51,7 @@ app.use('*all', async (req, res) => {
       render = (await import('./dist/server/entry-server.js')).render
     }
 
+    // noinspection ES6RedundantAwait
     const rendered = await render(url)
 
     const html = template

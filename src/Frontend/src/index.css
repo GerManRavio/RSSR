@@ -4,3 +4,15 @@
   margin: 0;
   padding: 0;
 }
+
+button {
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background: red;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+}

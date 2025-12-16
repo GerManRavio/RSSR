@@ -304,9 +304,8 @@ const TablePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDay]);
 
-  return (
-          <section className="m-1 gap-2">
-            <div className="text-sm border rounded p-2 bg-gray-700">
+  return (<>
+            <div className="text-sm p-2">
               <span className="font-semibold">Ausgewählt:</span>{" "}
               {selectedDate.toLocaleDateString("de-DE")}
               {" — "}
@@ -318,83 +317,84 @@ const TablePage = () => {
               {" / "}
               <span className="font-semibold">Monat:</span> {totals.monthTotal}h
             </div>
+            <section className="overflow-auto flex-[1_1_auto] h-full w-full p-2">
+              <table>
+                <thead>
+                {table.getHeaderGroups().map((hg) => (
+                        <tr key={hg.id}>
+                          {hg.headers.map((header) => {
+                            const isElementCol = header.column.id === "element";
+                            const isSelectedDayCol = header.column.id === `day-${selectedDay}`;
 
-            <table>
-              <thead>
-              {table.getHeaderGroups().map((hg) => (
-                      <tr key={hg.id}>
-                        {hg.headers.map((header) => {
-                          const isElementCol = header.column.id === "element";
-                          const isSelectedDayCol = header.column.id === `day-${selectedDay}`;
+                            const dayMatch = /^day-(\d+)$/.exec(header.column.id);
+                            const dayFromColumn = dayMatch ? Number(dayMatch[1]) : null;
 
-                          const dayMatch = /^day-(\d+)$/.exec(header.column.id);
-                          const dayFromColumn = dayMatch ? Number(dayMatch[1]) : null;
+                            return (
+                                    <th
+                                            key={header.id}
+                                            ref={(node) => {
+                                              if (dayFromColumn != null) dayHeaderRefs.current[dayFromColumn] = node;
+                                            }}
+                                            className={[
+                                              "pl-1 pr-2 text-left whitespace-nowrap",
+                                              "bg-gray-800 sticky -top-2",
+                                              isSelectedDayCol ? "bg-red-900" : "",
+                                              isElementCol ? "bg-gray-900 -left-2 z-20" : "",
+                                            ].join(" ")}
+                                    >
+                                      {header.isPlaceholder
+                                              ? null
+                                              : flexRender(header.column.columnDef.header, header.getContext())}
+                                    </th>
+                            );
+                          })}
+                        </tr>
+                ))}
+                </thead>
 
-                          return (
-                                  <th
-                                          key={header.id}
-                                          ref={(node) => {
-                                            if (dayFromColumn != null) dayHeaderRefs.current[dayFromColumn] = node;
-                                          }}
-                                          className={[
-                                            "pl-1 pr-2 text-left whitespace-nowrap",
-                                            " bg-gray-800",
-                                            isSelectedDayCol ? "bg-red-900" : "",
-                                            isElementCol ? "bg-gray-900" : "",
-                                          ].join(" ")}
-                                  >
-                                    {header.isPlaceholder
-                                            ? null
-                                            : flexRender(header.column.columnDef.header, header.getContext())}
-                                  </th>
-                          );
-                        })}
-                      </tr>
-              ))}
-              </thead>
+                <tbody>
+                {table.getRowModel().rows.map((row) => (
+                        <tr key={row.id}>
+                          {row.getVisibleCells().map((cell) => {
+                            const isElementCol = cell.column.id === "element";
+                            const isSelectedDayCol = cell.column.id === `day-${selectedDay}`;
 
-              <tbody>
-              {table.getRowModel().rows.map((row) => (
-                      <tr key={row.id}>
-                        {row.getVisibleCells().map((cell) => {
-                          const isElementCol = cell.column.id === "element";
-                          const isSelectedDayCol = cell.column.id === `day-${selectedDay}`;
+                            const dayMatch = /^day-(\d+)$/.exec(cell.column.id);
+                            const dayFromColumn = dayMatch ? Number(dayMatch[1]) : null;
 
-                          const dayMatch = /^day-(\d+)$/.exec(cell.column.id);
-                          const dayFromColumn = dayMatch ? Number(dayMatch[1]) : null;
-
-                          return (
-                                  <td
-                                          key={cell.id}
-                                          className={[
-                                            "pl-1 pr-2 whitespace-nowrap",
-                                            isSelectedDayCol ? "bg-red-950" : "",
-                                            isElementCol ? "bg-gray-800" : "",
-                                          ].join(" ")}
-                                  >
-                                    {isElementCol ? (
-                                            flexRender(cell.column.columnDef.cell, cell.getContext())
-                                    ) : (
-                                            <input
-                                                    type="number"
-                                                    step="0.25"
-                                                    min="0"
-                                                    defaultValue={cell.getValue<number>() ?? ""}
-                                                    onFocus={(e) => {
-                                                      if (dayFromColumn != null) setSelectedDay(dayFromColumn);
-                                                      e.currentTarget.select();
-                                                    }}
-                                                    className="w-14 text-sm px-1 py-0.5 rounded"
-                                            />
-                                    )}
-                                  </td>
-                          );
-                        })}
-                      </tr>
-              ))}
-              </tbody>
-            </table>
-          </section>
+                            return (
+                                    <td
+                                            key={cell.id}
+                                            className={[
+                                              "pl-1 pr-2 whitespace-nowrap ",
+                                              isSelectedDayCol ? "bg-red-950" : "",
+                                              isElementCol ? "bg-gray-800 sticky -left-2 z-10" : "",
+                                            ].join(" ")}
+                                    >
+                                      {isElementCol ? (
+                                              flexRender(cell.column.columnDef.cell, cell.getContext())
+                                      ) : (
+                                              <input
+                                                      type="number"
+                                                      step="0.25"
+                                                      min="0"
+                                                      defaultValue={cell.getValue<number>() ?? ""}
+                                                      onFocus={(e) => {
+                                                        if (dayFromColumn != null) setSelectedDay(dayFromColumn);
+                                                        e.currentTarget.select();
+                                                      }}
+                                                      className="w-14 text-sm px-1 py-0.5 rounded"
+                                              />
+                                      )}
+                                    </td>
+                            );
+                          })}
+                        </tr>
+                ))}
+                </tbody>
+              </table>
+            </section>
+          </>
   );
 };
 

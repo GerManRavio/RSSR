@@ -1,7 +1,7 @@
 import type {Metadata} from "next";
 import {Geist, Geist_Mono} from "next/font/google";
 import NavBar from "@/components/NavBar";
-import "./globals.css";
+import "../globals.css";
 import React from "react";
 import {Auth0Provider} from "@auth0/nextjs-auth0";
 
@@ -24,11 +24,11 @@ export default function RootLayout({children}: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-          <html lang="en" style={{overflow: "hidden", blockSize: 100 + '%'}}>
+          <html lang="en" className="overflow-hidden w-full h-full">
             <Auth0Provider>
-              <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} style={{blockSize: 100 + '%', display: "flex", flexDirection: "column", minBlockSize: 100 + '%'}}>
+              <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-full h-full min-w-full w-full`}>
                 <NavBar/>
-                <main className="" style={{blockSize: "100%", flex: '1 1 auto', overflow: "auto", inlineSize: "100%"}}>
+                <main className="overflow-auto flex-[1_1_auto] h-full w-full">
                   {children}
                 </main>
               </body>

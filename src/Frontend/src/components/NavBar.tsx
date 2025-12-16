@@ -8,10 +8,10 @@ const NavBar = async () => {
   const session = await auth0.getSession();
   const user = session?.user;
   return (
-          <header className="bg-black" style={{display: "flex", flexDirection: "column", flex: "0 0 auto"}}>
+          <header className="bg-black flex flex-col flex-[0_0_auto]">
             <nav className="flex flex-row justify-between border-b-2 rounded-lg p-2">
               <menu className="gap-1">
-                <Link href="/src/Frontend/public">Home</Link>
+                <Link href="/">Home</Link>
               </menu>
               <menu>
                 {user && <span>Welcome, {user.name}</span>}

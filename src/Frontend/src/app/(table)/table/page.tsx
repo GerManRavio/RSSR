@@ -6,7 +6,7 @@ import {
   useReactTable,
   type ColumnDef,
 } from "@tanstack/react-table";
-import {useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
+import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 
 type Element = {
   id: number;
@@ -275,7 +275,7 @@ const TablePage = () => {
   const didInitialScrollRef = useRef(false);
   const dayHeaderRefs = useRef<Record<number, HTMLTableCellElement | null>>({});
 
-  const scrollSelectedDayIntoCenter = (behavior: ScrollBehavior) => {
+  const scrollSelectedDayIntoCenter = useCallback((behavior: ScrollBehavior) => {
     const el = dayHeaderRefs.current[selectedDay];
     if (!el) return;
 
@@ -284,7 +284,7 @@ const TablePage = () => {
       block: "nearest",
       inline: "center",
     });
-  };
+  }, [selectedDay]);
 
   // 1) Initial: sofort zentrieren (ohne Animation), bevor der Browser paintet → kein "Springen"
   useLayoutEffect(() => {
@@ -294,7 +294,6 @@ const TablePage = () => {
       scrollSelectedDayIntoCenter("auto");
       didInitialScrollRef.current = true;
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 2) Danach: bei jeder Änderung smooth nachziehen (Header-Button oder Input-Focus)
